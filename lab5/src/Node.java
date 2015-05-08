@@ -1,0 +1,69 @@
+import java.io.BufferedReader;
+import java.io.FileNotFoundException;
+import java.io.FileReader;
+import java.io.IOException;
+import java.io.UnsupportedEncodingException;
+import java.security.NoSuchAlgorithmException;
+import java.util.ArrayList;
+import java.util.Random;
+
+public class Node {
+
+	public String nodeIP;
+	public Integer nodePort;
+	public String nodeNumberKey;
+	public Integer num_files = 0;
+	public ArrayList<String> filenames = new ArrayList<String>();
+	ArrayList<Integer> fileNum = new ArrayList<Integer>();
+	Integer nodeNumberKeyInLong;
+
+	public Node(String IP, Integer Port, String nodeNumberKey, Integer nodeNumberKeyInLong) throws UnsupportedEncodingException, NoSuchAlgorithmException {
+		this.nodeIP = IP;
+		this.nodePort = Port;
+		this.nodeNumberKey = nodeNumberKey;
+		this.nodeNumberKeyInLong = nodeNumberKeyInLong;
+	}
+
+	public void setFiles() {
+		BufferedReader br;
+		try {
+			ArrayList<String> allFiles = new ArrayList<String>();
+			br = new BufferedReader(new FileReader("filenames.txt"));
+			String line;
+			while ((line = br.readLine()) != null) {
+				allFiles.add(line);		
+				
+			}
+			br.close();
+			Random rndm = new Random();
+			int fileN;
+
+			for (int i = 0; i < 2; i++) {
+				fileN = rndm.nextInt(20);
+				while(fileNum.contains(fileN))
+				{
+					fileN = rndm.nextInt(20);
+				}
+				filenames.add(allFiles.get(rndm.nextInt(20)));
+				fileNum.add(fileN);
+			}
+			ArrayList<String> temp= new ArrayList<String>();
+			for(Integer i=0; i<filenames.size(); i++){
+				
+				temp.add(filenames.get(i).toLowerCase());
+			}
+			filenames.clear();
+			for(Integer i=0; i<temp.size(); i++){
+				String str = temp.get(i).replace(" ", "_").trim();
+				filenames.add(str);
+			}
+			num_files = filenames.size();
+		} catch (FileNotFoundException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	}
+}
